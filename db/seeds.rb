@@ -1,7 +1,22 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+require "open-uri"
+require "json"
+require "faker"
+Ingredient.destroy_all
+
+#Ingredient.create!(name: "coca")
+
+url = "https://www.thecocktaildb.com/api/json/v1/1/list.php?i=list"
+ing_list = JSON.parse(open(url).read)["drinks"]
+
+ing_list.each do |ing_hash|
+  p "creating ingredient :#{ing_hash["strIngredient1"]}"
+  Ingredient.create!(name: ing_hash["strIngredient1"])
+end
+
+10.times do
+  cocktail = Cocktail.new(
+    name: Faker::DragonBall.character
+    )
+  cocktail.save
+end
+
